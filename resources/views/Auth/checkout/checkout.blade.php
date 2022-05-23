@@ -66,7 +66,7 @@ Thanh toán
                                                                 </div>
                                                             </div>
 
-                                                            <a href="#" class="forget-pwd">Forget Password?</a>
+                                                            <a href="forgetpassword" class="forget-pwd">Forget Password?</a>
                                                         </div>
                                                     </div>
 
