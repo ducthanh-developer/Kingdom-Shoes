@@ -55,7 +55,8 @@
 
                                 <div class="single-input-item">
                                     <label for="">{{__('Mật khẩu ')}}</label>
-                                    <input id="password" type="password" class="@error('password') is-invalid @enderror" name="password" autocomplete="current-password" />
+                                    <input id="password" type="password" class="@error('password') is-invalid @enderror" name="password" autocomplete="current-password" /><i onclick="showPass()" style="margin-left: -30px; 
+                                    cursor: pointer;" class="fa fa-eye"></i>
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -92,6 +93,18 @@
     </div>
     <!-- login register wrapper end -->
 </main>
+@push('scripts')
+<script>
+    function showPass() {
+    var x = document.getElementById("password");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+    }
+</script>
+@endpush
 <!-- main wrapper end -->
 {{-- <div class="container">
     <div class="d-flex justify-content-center h-100">

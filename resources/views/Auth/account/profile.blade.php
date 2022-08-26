@@ -151,29 +151,36 @@
                                             <div class="tab-pane fade" id="address-edit" role="tabpanel">
                                                 <div class="myaccount-content">
                                                     <h3>Thông tin</h3>
-
                                                     <div class="account-details-form">
                                                             <div class="row">
                                                                 <div class="col-lg-6">
                                                                     <div class="single-input-item">
                                                                         <label for="first-name" class="required">Tên hiển thị</label>
                                                                         <input type="text" value="{{Auth::user()->name}}" id="idMK" placeholder="{{Auth::user()->name}}" />
+                                                                        <ul class="parsley-errors-list text-danger name">
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
-<div class="col-lg-6">
+                                                                <div class="col-lg-6">
                                                                     <div class="single-input-item">
                                                                         <label for="last-name" class="required">Số điện thoại</label>
                                                                         <input type="text" value="{{Auth::user()->phone}}" id="phone" placeholder="{{Auth::user()->phone}}" />
+                                                                        <ul class="parsley-errors-list text-danger phone">
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="single-input-item">
                                                                 <label for="display-name" class="required">Địa chỉ</label>
                                                                 <input type="text" value="{{Auth::user()->m_address}}" id="address" placeholder="{{Auth::user()->m_address}}" />
+                                                                <ul class="parsley-errors-list text-danger m_address">
+                                                                </ul>
                                                             </div>
                                                             <div class="single-input-item">
                                                                 <label for="email" class="required">Địa chỉ email</label>
                                                                 <input type="email" value="{{Auth::user()->email}}" id="email" placeholder="{{Auth::user()->email}}"/>
+                                                                <ul class="parsley-errors-list text-danger email">
+                                                                </ul>
                                                             </div>
                                                             <div class="single-input-item">
                                                                 <button type="submit" id="update_profile" class="check-btn sqr-btn ">Lưu</button>
@@ -195,19 +202,26 @@
                                                                 </div>
                                                                 <div class="single-input-item">
                                                                     <label for="current-pwd" class="required">Mật khẩu hiện tại</label>
-                                                                    <input type="password" name="matkhaucu" id="matkhaucu" placeholder="Mật khẩu hiện tại" />
+                                                                    <input type="password" name="matkhaucu" id="matkhaucu" placeholder="Mật khẩu hiện tại" /><i onclick="showPass()" style="margin-left: -30px; 
+                                                                    cursor: pointer;" class="fa fa-eye"></i>
+                                                                    <ul class="parsley-errors-list text-danger matkhaucu">
+                                                                    </ul>
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-lg-6">
                                                                         <div class="single-input-item">
                                                                             <label for="new-pwd" class="required">Mật khẩu mới</label>
                                                                             <input type="password" name="matkhaumoi" id="matkhaumoi" placeholder="Mật khẩu mới" />
+                                                                            <ul class="parsley-errors-list text-danger matkhaumoi">
+                                                                            </ul>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-6">
                                                                         <div class="single-input-item">
                                                                             <label for="confirm-pwd" class="required">Xác nhận mật khẩu</label>
                                                                             <input type="password" name="xacnhanmatkhau" id="xacnhanmatkhau" placeholder="Xác nhận mật khẩu" />
+                                                                            <ul class="parsley-errors-list text-danger xacnhanmatkhau">
+                                                                            </ul>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -279,6 +293,23 @@
                     if(data = 'thanhcong'){
                         alertify.success('Cập nhật thành công!');
                     }
+                },
+                error: function(error) {
+                    console.error(error);
+                    ["matkhaucu", "matkhaumoi", "xacnhanmatkhau"
+                    ].map((item) => {
+                        $(`.${item}`).empty();
+                    })
+                    let validate = error.responseJSON.errors;
+                    for (const key in validate) {
+                        console.log("key", key);
+                        let content = '';
+                        validate[key].map((item) => {
+                            content += `<li>${item}</li>`
+                        })
+                        $(`.${key}`).html(content)
+                    }
+                    alertify.error('Cập nhật mật khẩu thất bại! Vui lòng kiểm tra lại !')
                 }
             })
         });
@@ -305,10 +336,36 @@
                     if(data = 'success'){
                         alertify.success('Cập nhật thành công');
                     }
+                },
+                error: function(error){
+                    console.log(error);
+                    ["name", "email", "phone", "m_address"
+                    ].map((item) => {
+                        $(`.${item}`).empty();
+                    })
+                    let validate = error.responseJSON.errors;
+                    for (const key in validate) {
+                        console.log("key", key);
+                        let content = '';
+                        validate[key].map((item) => {
+                            content += `<li>${item}</li>`
+                        })
+                        $(`.${key}`).html(content)
+                    }
+                    alertify.error('Cập nhật thông tin thất bại!');
                 }
             })
         });
     });
 </script>
-
+<script>
+    function showPass() {
+    var x = document.getElementById("matkhaucu");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+    }
+</script>
 @endpush

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\AddUserRequest;
 
 
 class UserControllerApi extends Controller
@@ -30,7 +31,7 @@ class UserControllerApi extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddUserRequest $request)
     {
         try {
             $user = new User();
@@ -71,7 +72,7 @@ class UserControllerApi extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         try {
             $user = User::find($id);

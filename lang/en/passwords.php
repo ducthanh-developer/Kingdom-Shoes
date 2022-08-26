@@ -14,8 +14,8 @@ return [
     */
 
     'reset' => 'Đặt lại mật khẩu thành công!',
-    'sent' => 'Thư đặt lại mật khẩu đã được gửi vào mail của bạn!',
-    'throttled' => 'Vui lòng kiểm tra mail trước khi thử lại!',
+    'sent' => 'Thư đặt lại mật khẩu đã được gửi vào email của bạn!',
+    'throttled' => 'Vui lòng kiểm tra email trước khi thử lại!',
     'token' => 'Không hợp lệ!',
     'user' => "Chúng tôi không tìm thấy tài khoản trên hệ thống!",
 

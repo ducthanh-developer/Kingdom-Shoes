@@ -34,8 +34,8 @@
                                             </a>
                                         </h5>
                                         <ul class="blog-meta">
-                                            <li><span>By: </span>${item.user.name}</li>
-                                            <li><span>On: </span>${moment(item.created_at).format('DD/MM/YYYY')}</li>
+                                            <li><span>Tác giả: </span>${item.user.name}</li>
+                                            <li><span>Thời gian: </span>${moment(item.created_at).format('DD/MM/YYYY')}</li>
                                         </ul>
                                         <a href="{{ url('/blog-detail/') }}/${item.m_slug}" class="read-more">Đọc thêm...</a>
                                     </div>
