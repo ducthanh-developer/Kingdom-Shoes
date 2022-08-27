@@ -17,30 +17,52 @@ Danh mục sản phẩm
         $('.ion-android-favorite-outline').click(function(event) {
             event.preventDefault();
             var idProduct = $(this).data('id');
-            $("#product-favourite-" + idProduct).addClass("active-favourite");
-            $.ajax({
-                type: "post",
-                url: "/product-favourite",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    'idProduct': idProduct,
-                },
-                success: function(response) {
-                    // console.log(response);
-                    // toastr.success('',
-                    //     'Chọn sản phẩm yêu thích thành công')
-                    if (response.status == 200) {
-                        toastr.success('',
-                            response.message)
-                    } else {
-                        toastr.success('',
-                            response.message)
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
+            var listproductStorage = localStorage.getItem('product');
+            var josnListproductStorage = JSON.parse(listproductStorage);
+            if (josnListproductStorage && josnListproductStorage.length > 0) {
+                var result = josnListproductStorage.find(item => item.id === idProduct);
+                if (result) {
+                    toastr.error('', "Sản phẩm này đã được chọn");
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "/product-favourite",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'idProduct': idProduct,
+                        },
+                        success: function(response) {
+                            let clientsArr = JSON.parse(localStorage.getItem('product')) || [];
+                            clientsArr.push(response.data);
+                            localStorage.setItem('product', JSON.stringify(clientsArr));
+                            toastr.success('',
+                                'Chọn sản phẩm yêu thích thành công')
+                        },
+                        error: function(error) {
+                            toastr.error('', error);
+                        }
+                    });
                 }
-            });
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/product-favourite",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        'idProduct': idProduct,
+                    },
+                    success: function(response) {
+                        let clientsArr = JSON.parse(localStorage.getItem('product')) || [];
+                        clientsArr.push(response.data);
+                        localStorage.setItem('product', JSON.stringify(clientsArr));
+                        toastr.success('',
+                            'Chọn sản phẩm yêu thích thành công')
+                    },
+                    error: function(error) {
+                        toastr.error('', error);
+                    }
+                });
+            }
 
         });
     });
@@ -110,7 +132,7 @@ Danh mục sản phẩm
                             <div class="sidebar-body">
                                 <ul class="color-list">
                                     @foreach($categories as $cate)
-                                        <li><a href="{{URL::to('/product_list/'.$cate->id)}}">{{$cate->m_title}} <span>({{$cate->tongproduct->count()}})</span></a></li>
+                                    <li><a href="{{URL::to('/product_list/'.$cate->id)}}">{{$cate->m_title}} <span>({{$cate->tongproduct->count()}})</span></a></li>
                                     @endforeach
                                 </ul>
                             </div>

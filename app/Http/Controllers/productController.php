@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
+use Session;
+use Illuminate\Http\Response;
 
 
 class productController extends Controller
@@ -26,13 +29,13 @@ class productController extends Controller
             'title' => 'Danh Mục',
             'action' => 'Sản phẩm'
         ];
-        $showdanhmuc = CategoryModel::orderBy('id','asc')->get();
+        $showdanhmuc = CategoryModel::orderBy('id', 'asc')->get();
         $datas = product::orderBy('id', 'asc')->search()->paginate(10);
-        if(isset($_GET['danhsach'])){
+        if (isset($_GET['danhsach'])) {
             $sort_by = $_GET['danhsach'];
             foreach ($showdanhmuc as $key => $value) {
                 $dataid = $value->id;
-                if($sort_by == $dataid){
+                if ($sort_by == $dataid) {
                     $datas = product::orderBy('id', 'asc')->where('m_id_category', $dataid)->search()->paginate(10);
                     $datas->render();
                 }
@@ -42,35 +45,37 @@ class productController extends Controller
                 $datas->render();
             }
         }
-        return view('admin.product.index', compact('datas', 'data','showdanhmuc'));
+        return view('admin.product.index', compact('datas', 'data', 'showdanhmuc'));
     }
     // giảm giá theo sản phẩm và giảm giá theo danh mục sản phẩm
-    public function capnhatprice(Request $request){
+    public function capnhatprice(Request $request)
+    {
         $data = $request->all();
-        if($data['idsotiengiam'] == 2 && isset($data['allids'])){
+        if ($data['idsotiengiam'] == 2 && isset($data['allids'])) {
             product::whereIn('id', $data['allids'])->update(['m_original_price' => $data['inputprice']]);
-        }elseif($data['idsotiengiam'] == 1 && isset($data['allids'])){
+        } elseif ($data['idsotiengiam'] == 1 && isset($data['allids'])) {
             $input = $data['inputprice'];
             $ids = $data['allids'];
             foreach (product::whereIn('id', $data['allids'])->get() as $val) {
                 $updated = product::find($val->id);
-                $updated->m_original_price = $val->m_original_price - ($val->m_original_price * $data['inputprice'])/100;
+                $updated->m_original_price = $val->m_original_price - ($val->m_original_price * $data['inputprice']) / 100;
                 $updated->save();
             }
-        }elseif($data['iddanhmuc'] != 0 && !isset($data['allids']) && $data['idsotiengiam'] == 2){
+        } elseif ($data['iddanhmuc'] != 0 && !isset($data['allids']) && $data['idsotiengiam'] == 2) {
             product::where('m_id_category', $data['iddanhmuc'])->update(['m_original_price' => $data['inputprice']]);
-        }elseif($data['iddanhmuc'] != 0 && !isset($data['allids']) && $data['idsotiengiam'] == 1){
+        } elseif ($data['iddanhmuc'] != 0 && !isset($data['allids']) && $data['idsotiengiam'] == 1) {
             foreach (product::where('m_id_category', $data['iddanhmuc'])->get() as $val) {
                 $updated = product::find($val->id);
-                $updated->m_original_price = $val->m_original_price - ($val->m_original_price * $data['inputprice'])/100;
+                $updated->m_original_price = $val->m_original_price - ($val->m_original_price * $data['inputprice']) / 100;
                 $updated->save();
             }
         }
     }
     // xóa tất cả
-    public function deleteallsp(Request $request){
+    public function deleteallsp(Request $request)
+    {
         $data = $request->all();
-        if(isset($data['ids'])){
+        if (isset($data['ids'])) {
             foreach (product::whereIn('id', $data['ids'])->get() as $key => $val) {
                 $deleteimg = json_decode($val->m_picture);
                 $length = count($deleteimg);
@@ -160,21 +165,21 @@ class productController extends Controller
             $luuhinh = json_encode($chuyenhinh, JSON_UNESCAPED_SLASHES);
         }
         $create->m_picture = $luuhinh;
-        if($create->save()){
-            if($request->soluong){
-                if($data['soluong'] != null && $data['size']){
-                $syncdata = [];
-                $soluong = $data['soluong'];
-                $size = $data['size'];
-                for ($i=0; $i < count($data['soluong']); $i++) {
-                    $syncdata[$size[$i]] = ['m_quanti' => $soluong[$i], 'm_size' => $size[$i]];
+        if ($create->save()) {
+            if ($request->soluong) {
+                if ($data['soluong'] != null && $data['size']) {
+                    $syncdata = [];
+                    $soluong = $data['soluong'];
+                    $size = $data['size'];
+                    for ($i = 0; $i < count($data['soluong']); $i++) {
+                        $syncdata[$size[$i]] = ['m_quanti' => $soluong[$i], 'm_size' => $size[$i]];
+                    }
+                    $create->themsoluong()->attach($syncdata);
+                    return redirect()->route('product.index')->with('alert_success', 'Thêm mới sản phẩm thành công.');
                 }
-                $create->themsoluong()->attach($syncdata);
-                return redirect()->route('product.index')->with('alert_success', 'Thêm mới sản phẩm thành công.');
+            } else {
+                return redirect()->route('product.index')->with('alert_success', 'Thêm mới sản phẩm thành công. nhưng chưa có số lượng tồn kho sản phẩm');
             }
-        }else{
-            return redirect()->route('product.index')->with('alert_success', 'Thêm mới sản phẩm thành công. nhưng chưa có số lượng tồn kho sản phẩm');
-        }
         }
     }
 
@@ -206,7 +211,7 @@ class productController extends Controller
         $soluongvasize = product_inventory::where('m_id_product', $updatene->id)->first();
         $showsoluongvasize = product_inventory::where('m_id_product', $updatene->id)->get();
         $showcategory = CategoryModel::orderBy('id', 'asc')->get();
-        return view('admin.product.edit', compact('data', 'updated', 'showcategory','soluongvasize','showsoluongvasize'));
+        return view('admin.product.edit', compact('data', 'updated', 'showcategory', 'soluongvasize', 'showsoluongvasize'));
     }
 
     /**
@@ -272,19 +277,19 @@ class productController extends Controller
                 $updated->m_picture = $luuhinh;
             }
         }
-        if($updated->save()){
-            if($request->soluong && $request->size){
-                if($data['soluong'] != null && $data['size'] != null){
+        if ($updated->save()) {
+            if ($request->soluong && $request->size) {
+                if ($data['soluong'] != null && $data['size'] != null) {
                     $syncdatane = [];
                     $soluong = $data['soluong'];
                     $size = $data['size'];
-                    for ($i=0; $i < count($data['soluong']); $i++) {
+                    for ($i = 0; $i < count($data['soluong']); $i++) {
                         $syncdatane[$size[$i]] = ['m_quanti' => $soluong[$i], 'm_size' => $size[$i]];
                     }
                     $updated->themsoluong()->sync($syncdatane);
                 }
                 return redirect()->route('product.index')->with('alert_success', 'Sửa sản phẩm thành công.');
-            }else{
+            } else {
                 return redirect()->route('product.index')->with('alert_success', 'Sửa sản phẩm thành công. nhưng sản phẩm tồn kho và size vẫn đang được giữ nguyên.');
             }
         }
@@ -318,55 +323,34 @@ class productController extends Controller
     //chọn sản phẩm yêu thích
     public function productFavourite(Request $request)
     {
-        if(Auth::user()) {
-            $userLogin = Auth::user()->id;
         $idProduct = $request->idProduct;
-        $checkData = DB::table('t_user_favourite')->where('id_user', $userLogin)->where('id_product', $idProduct)->first();
-        if ($checkData) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Sản phẩm này đã được chọn'
-            ]);
-        }
-        $addFavourite = DB::table('t_user_favourite')->insert([
-            'id_user' =>  $userLogin,
-            'id_product' => $idProduct
-        ]);
+        $product = DB::table('t_product')->where('id', $idProduct)->first();
         return response()->json([
-            'status' => 200,
-            'message' => 'Bạn đã chọn sản phẩm yêu thích thành công',
-            'data' =>  $addFavourite,
+            'data' => $product,
         ]);
-        } else {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Vui lòng đăng nhập để thực hiện chức năng này'
-            ]);
-        }
-
     }
 
-    public function listProductFavourite()
+    public function listProductFavourite(Request $request)
     {
-       if(Auth::user()) {
-        $userLogin = Auth::user()->id;
-        $list_favourite = DB::table('t_product')->join('t_user_favourite', 't_user_favourite.id_product', '=', 't_product.id')->where('t_user_favourite.id_user', $userLogin)->get();
-        return view('Auth.product_list.favourite', compact('list_favourite'));
-       } else {
-            $list_favourite = [];
-            return view('Auth.product_list.favourite', compact('list_favourite'));
-       }
+
+        return view('Auth.product_list.favourite');
+    }
+
+    public function checkProductFavourite(Request $request) {
+        $list_favourite = $request->storedNames;
+        return redirect()->route('fav')->with( ['list_favourite' => $list_favourite] );
     }
 
     //Lấy danh sách sản phẩm theo danh mục
-    public function categoryProduct($id) {
-    $categories = CategoryModel::orderBy('id','desc')->get();
-    $category = DB::table('t_category')->where('m_id_parent', $id)->first();
-        if($category) {
+    public function categoryProduct($id)
+    {
+        $categories = CategoryModel::orderBy('id', 'desc')->get();
+        $category = DB::table('t_category')->where('m_id_parent', $id)->first();
+        if ($category) {
             $showproduct = DB::table('t_product')->where('m_id_category', $id)->orWhere('m_id_category', $category->id)->get();
         } else {
             $showproduct = DB::table('t_product')->where('m_id_category', $id)->get();
         }
-        return view('Auth.category.index', compact('showproduct','categories'));
+        return view('Auth.category.index', compact('showproduct', 'categories'));
     }
 }

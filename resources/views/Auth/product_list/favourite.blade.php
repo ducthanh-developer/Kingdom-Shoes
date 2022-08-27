@@ -1,3 +1,10 @@
+<?php
+// $test = ["<script>document.write(JSON.parse(localStorage.getItem('product')));</script>;"];
+// var_dump(json_encode($test));
+// $arrayinterests = explode(" ",$test);
+// var_dump($test);
+// var_dump($arrayinterests);
+?>
 @extends('Auth.layouts.master')
 @section('title')
 Danh sách sản phẩm
@@ -13,32 +20,28 @@ Danh sách sản phẩm
 @push('scripts')
 <script>
     $(document).ready(function() {
-        $('.ion-android-favorite-outline').click(function(event) {
-            event.preventDefault();
-            var idProduct = $(this).data('id');
-            $("#product-favourite-" + idProduct).addClass("active-favourite");
-            $.ajax({
-                type: "post",
-                url: "/product-favourite",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    'idProduct': idProduct,
-                },
-                success: function(response) {
-                    if (response.status == 200) {
-                        toastr.success('',
-                            response.message)
-                    } else {
-                        toastr.error('',
-                            response.message)
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-
-        });
+        var storedNames = JSON.parse(localStorage.getItem("product"));
+        // console.log(storedNames);
+        for (var item = 0; item < storedNames.length; item++) {
+            // console.log(storedNames);
+            var utlImage = JSON.parse(storedNames[item].m_picture);
+            $('.shop-product-wrap').append(` <div class="col-lg-3 col-sm-6">
+            <div class="product-item mb-53">
+            <div class="product-thumb">
+            <a href="/chi-tiet-san-pham/${storedNames[item].m_product_slug}"">
+            <img src="{!! asset('uploads/${utlImage[0]}') !!}" alt="">
+            </a>
+            </div>
+            <div class="product-content">
+            <h5 class="product-name">
+            <a href="/chi-tiet-san-pham/${storedNames[item].m_product_slug}">${storedNames[item].m_product_name}</a>
+            </h5>
+            <div class="price-box">
+            <span class="price-regular">${storedNames[item].m_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}VND</span>
+            <span class="price-old"><del>${storedNames[item].m_original_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del></span>
+            </div>
+            </div>`)
+        }
     });
 
     $('.cart-info').submit(function(e) {
@@ -68,6 +71,7 @@ Danh sách sản phẩm
 </script>
 @endpush
 @section('content')
+
 <main>
     <div class="breadcrumb-area bg-img" data-bg="{{ URL::asset('Auth/img/banner/breadcrumb-banner.jpg') }}">
         <div class="container">
@@ -100,63 +104,8 @@ Danh sách sản phẩm
                             </div>
                         </div>
                         <div class="shop-product-wrap grid-view row mbn-50">
-                            @foreach ($list_favourite as $key => $showprd)
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="product-item mb-53">
-                                    <div class="product-thumb">
-                                        <a href="{{ route('productdetails', $showprd->m_product_slug) }}">
-                                            @if (json_decode($showprd->m_picture))
-                                            <img src="{{ asset('uploads') }}/{{ json_decode($showprd->m_picture)[0] }}" alt="">
-                                            @endif
-                                        </a>
-                                    </div>
-                                    <div class="product-content">
-                                        <h5 class="product-name">
-                                            <a href="{{ route('productdetails', $showprd->m_product_slug) }}">{{ $showprd->m_product_name }}</a>
-                                        </h5>
-                                        <div class="price-box">
-                                            <span class="price-regular">{{ number_format($showprd->m_price, 0, ',', '.') }}VND</span>
-                                            <span class="price-old"><del>{{ number_format($showprd->m_original_price, 0, ',', '.') }}VND</del></span>
-                                        </div>
-                                        <div class="product-action-link">
-                                            <a href="#" class="add-cart" data-toggle="tooltip" title="Thêm Vào Giỏ"><i class="ion-bag"></i></a>
-                                            <form action="" method="post" class="cart-info">
-                                                @csrf
-                                                <input type="hidden" name="quantity" value="1">
-                                                <input type="hidden" name="productId" value="{{ $showprd->id }}">
-                                            </form>
-                                            <a href="#" data-toggle="modal" data-target="#quick_view">
-                                                <span data-toggle="tooltip" title="Xem Nhanh"><i class="ion-ios-eye-outline"></i></span> </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="product-list-item mb-30">
-                                    <div class="product-thumb">
-                                        <a href="product-details.html">
-                                            <img src="{{ URL::asset('Auth/img/product/product-1.jpg') }}" alt="product thumb">
-                                        </a>
-                                    </div>
-                                    <div class="product-content-list">
-                                        <h5 class="product-name">
-                                            <a href="product-details.html">Leather Mens Slipper</a>
-                                        </h5>
-                                        <div class="price-box">
-                                            <span class="price-regular">$80.00</span>
-                                            <span class="price-old"><del>$70.00</del></span>
-                                        </div>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere
-                                            metus vitae arcu imperdiet, id aliquet ante scelerisque. Sed sit amet
-                                            sem vitae urna fringilla tempus.</p>
-                                        <div class="product-link-2 position-static">
-                                            <a href="#" data-toggle="tooltip" title="Yêu Thích"><i class="ion-android-favorite-outline"></i></a>
-                                            <a href="#" data-toggle="tooltip" title="Thêm Vào Giỏ"><i class="ion-bag"></i></a>
-                                            <a href="#" data-toggle="modal" data-target="#quick_view">
-                                                <span data-toggle="tooltip" title="Xem Nhanh"><i class="ion-ios-eye-outline"></i></span> </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
+
+
                         </div>
                     </div>
                 </div>

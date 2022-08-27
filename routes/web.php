@@ -289,13 +289,16 @@ Route::get('/get_data_khachang/{id}', [Comment_Product::class, 'get_data_khachan
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 //Chọn sản phẩm yêu thích
 Route::post('/product-favourite', [productController::class, 'productFavourite']);
+
+Route::post('/check-product-favourite', [productController::class, 'checkProductFavourite']);
 //Danh sách sản phẩm yêu thích của user đã chọn
 Route::get('/list-product-favourite', [productController::class, 'listProductFavourite'])->name('list-favourite');
+
 //Search
 Route::post('/search', [productController::class, 'search']);
 //Sản phẩm theo danh mục
 Route::get('category/{id}', [productController::class, 'categoryProduct'])->name('categoryProduct');
-// pages 
+// pages
 Route::get('/quydinh', function () {
     return view('pages.quydinh');
 })->name('quydinh');
