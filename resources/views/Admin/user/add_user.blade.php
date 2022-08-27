@@ -44,15 +44,15 @@
                     console.log("post", response);
                     $(':reset').click();
                     $('.dropify-clear:first').click();
-                    toastr.success('Thêm thành công!'),
-                        ["name", "email", "phone", "m_address"
+                    toastr.success('Thêm tài khoản thành công!'),
+                        ["name", "email", "phone", "m_address", 'm_avatar', 'password'
                         ].map((item) => {
                             $(`.${item}`).empty();
                         })
                 },
                 error: function(error) {
                     console.error(error);
-                    ["name", "email", "phone", "m_address"
+                    ["name", "email", "phone", "m_address", 'm_avatar', 'password'
                     ].map((item) => {
                         $(`.${item}`).empty();
                     })
@@ -120,6 +120,8 @@
                                             <div class="col-md-10">
                                                 <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu khẩu"
                                                     name="password">
+                                                <ul class="parsley-errors-list password">
+                                                </ul>
                                                 <input class="mt-2" type="checkbox" onclick="showPass()"> Hiện mật khẩu
                                             </div>
                                         </div>
@@ -173,7 +175,10 @@
                                                 <div class="card-box">
                                                     <input type="file" name="m_avatar" class="dropify"
                                                         data-default-file="" />
+                                                        <ul class="parsley-errors-list m_avatar">
+                                                        </ul>
                                                 </div>
+                                                
                                             </div><!-- end col -->
                                         </div>
                                         <div class="form-group text-right mb-0">

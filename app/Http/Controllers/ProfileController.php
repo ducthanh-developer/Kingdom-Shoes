@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Gloudemans\Tests\Shoppingcart\Fixtures\ProductModel;
 use App\Models\product;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\ChangePasswordRequest;
 
 
 class ProfileController extends Controller
@@ -37,18 +39,33 @@ class ProfileController extends Controller
         
     }
     // Cập nhật thông tin profile
-    public function updateProfile(Request $request)
-    {
-        $updated = accountModel::find(\Auth::user()->id);
-        $updated->email = $request->email;
-        $updated->phone = $request->phone;
-        $updated->m_address = $request->m_address;
-        if($updated->save()){
-            return redirect()->route('updateProfile')->with('alert_success', 'Cập nhật thông tin thành công.');}
-    }
+    // public function updateProfile(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|max:55',
+    //         'email' => 'required',
+    //         'phone' => ['required','regex:/^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/'],
+    //         'm_address'=> 'required',
+    //     ],[
+    //         'name.required' => 'Họ và tên không được bỏ trống!',
+    //         'name.max'=> 'Họ và tên quá dài!',
+    //         'email' => 'Email không được bỏ trống!',
+    //         'phone.regex' => 'Số điện thoại không đúng định dạng',
+    //         'phone.required' => 'Số điện thoại không được bỏ trống!',
+    //         'address.required' => 'Địa chỉ không được bỏ trống!'
+    //     ]);
+    //     $updated = accountModel::find(\Auth::user()->id);
+    //     $updated->name = $request->name;
+    //     $updated->email = $request->email;
+    //     $updated->phone = $request->phone;
+    //     $updated->m_address = $request->m_address;
+    //     if($updated->save()){
+    //         return redirect()->route('updateProfile')->with('alert_success', 'Cập nhật thông tin thành công.');}
+    // }
     
-    public function doithongtinuser(Request $request){
+    public function doithongtinuser(UpdateProfileRequest $request){
         $updated = accountModel::find(\Auth::user()->id);
+        $updated->name = $request->name;
         $updated->email = $request->email;
         $updated->phone = $request->phone;
         $updated->m_address = $request->m_address;
@@ -56,7 +73,7 @@ class ProfileController extends Controller
             return redirect()->back()->with('alert_success', 'Cập nhật thông tin thành công.');
         }
     }
-    public function doimatkhauuser(Request $request){
+    public function doimatkhauuser(ChangePasswordRequest $request){
         $id = $request->id;
         $data = $request->all();
         $passold = $data['matkhaucu'];

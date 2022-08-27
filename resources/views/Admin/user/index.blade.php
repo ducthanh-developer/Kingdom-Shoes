@@ -79,7 +79,6 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade show active" id="home1">
                             <center> - Đổi mật khẩu - </center>
-                            {{$errors}}
                         <form method="post" action="{{route('profile.update', Auth::user()->id)}}">
                             @csrf @method('PUT')
                             <div class="form-group">
@@ -88,15 +87,22 @@
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Mật khẩu cũ</label>
-                                <input type="password" class="form-control" id="matkhaucu" name="matkhaucu" placeholder="Nhập mật khẩu cũ của bạn">
+                                <input type="password" class="form-control showPass" id="matkhaucu" name="matkhaucu" placeholder="Nhập mật khẩu cũ của bạn">
+                                <input class="mt-2" type="checkbox" onclick="showPass()"> Hiện mật khẩu
+                                <ul class="parsley-errors-list matkhaucu">
+                                </ul>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Mật khẩu mới</label>
-                                <input type="password" class="form-control" id="matkhaumoi" name="matkhaumoi" placeholder="Nhập mật khẩu mới">
+                                <input type="password" class="form-control showPass" id="matkhaumoi" name="matkhaumoi" placeholder="Nhập mật khẩu mới">
+                                <ul class="parsley-errors-list matkhaumoi">
+                                </ul>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Xác nhận mật khẩu mới</label>
-                                <input type="password" class="form-control" id="xacnhanmatkhau" name="xacnhanmatkhau" placeholder="Xác nhận mật khẩu mới">
+                                <input type="password" class="form-control showPass" id="xacnhanmatkhau" name="xacnhanmatkhau" placeholder="Xác nhận mật khẩu mới">
+                                <ul class="parsley-errors-list xacnhanmatkhau">
+                                </ul>
                             </div>
                             <button type="submit" id="btnluumk" class="btn btn-primary">Lưu mật khẩu</button>
                         </form>
@@ -117,6 +123,11 @@
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email</label>
                                 <input type="text" class="form-control" id="email" name="email" value="{{Auth::user()->email}}" placeholder="Nhập địa chỉ email">
+                                @error('email')
+                                <span class="text-danger">
+                                    {{$message}}
+                                </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Số điện thoại</label>
@@ -252,12 +263,37 @@
                     if(data = 'thanhcong'){
                         alertify.success('Cập nhật mật khẩu thành công');
                     }
-                    else
-                        alertify.success('Vui lòng kiểm tra mật khẩu xác nhận!');
+                },
+                error: function(error) {
+                    console.error(error);
+                    ["matkhaucu", "matkhaumoi", "xacnhanmatkhau"
+                    ].map((item) => {
+                        $(`.${item}`).empty();
+                    })
+                    let validate = error.responseJSON.errors;
+                    for (const key in validate) {
+                        console.log("key", key);
+                        let content = '';
+                        validate[key].map((item) => {
+                            content += `<li>${item}</li>`
+                        })
+                        $(`.${key}`).html(content)
+                    }
+                    alertify.error('Cập nhật mật khẩu thất bại! Vui lòng kiểm tra lại !')
                 }
             })
         });
     });
+</script>
+<script>
+    function showPass() {
+    var x = document.getElementById("matkhaucu");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+    }
 </script>
 
 @endpush

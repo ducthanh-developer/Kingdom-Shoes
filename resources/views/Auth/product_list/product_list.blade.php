@@ -12,6 +12,7 @@ Danh sách sản phẩm
 @endpush
 @push('scripts')
 <script>
+    //Sản phẩm yêu thích FE của Yến
     $(document).ready(function() {
         $('.ion-android-favorite-outline').click(function(event) {
             event.preventDefault();
@@ -63,10 +64,7 @@ Danh sách sản phẩm
                 });
             }
         });
-        // var storedNames = JSON.parse(localStorage.getItem("product"));
-        // document.cookie = "myJavascriptVar = " + JSON.stringify(storedNames);
     });
-
     $('.cart-info').submit(function(e) {
         e.preventDefault();
         $.ajax({
@@ -91,12 +89,10 @@ Danh sách sản phẩm
             }
         });
     });
-
     $('.add-cart').click(function(e) {
         e.preventDefault();
         $(this).next('.cart-info').submit();
     });
-
     $('.nice-select.size').change(function(e) {
         e.preventDefault();
         $('input[name=sizeId]').val(this.value);
@@ -255,7 +251,7 @@ Danh sách sản phẩm
                                     </div>
                                     <div class="product-content">
                                         <h5 class="product-name">
-                                            <a href="{{ route('productdetails', $showprd->m_product_slug) }}">{{ Str::length($showprd->m_product_name) > 10 ? Str::substr($showprd->m_product_name, 0, 15) . '...' : $showprd->m_product_name }}</a>
+                                            <a href="{{ route('productdetails', $showprd->m_product_slug) }}">{{ Str::length($showprd->m_product_name) > 30 ? Str::substr($showprd->m_product_name, 0, 30) . '...' : $showprd->m_product_name }}</a>
                                         </h5>
                                         <div class="price-box">
                                             <div class="price-regular">

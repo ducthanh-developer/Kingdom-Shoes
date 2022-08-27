@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Validator;
+use App\Http\Requests\ChangePasswordRequest;
 
 
 class UserController extends Controller
@@ -46,7 +47,7 @@ class UserController extends Controller
     }
 
 
-    public function doimatkhauadmin(Request $request){
+    public function doimatkhauadmin(ChangePasswordRequest $request){
         $id = $request->id;
         $data = $request->all();
         $passold = $data['matkhaucu'];
@@ -60,13 +61,6 @@ class UserController extends Controller
                     echo 'Đổi mật khẩu thành công!';
                 }  
             }
-            elseif($data['matkhaumoi'] !== $data['xacnhanmatkhau']){
-                return back()->alert('Mật khẩu không khớp!');
-            }
-        }
-        else{
-            return back() ->with('message', 'Current Password Error !')
-            ->withInput();
         }
     }
     public function doithongtinadmin(Request $request){
@@ -143,10 +137,13 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|max:55',
             'phone' => ['required','regex:/^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/'],
+            'email' => 'required|email',
             'm_address'=> 'required',
         ],[
             'name.required' => 'Họ và tên không được bỏ trống!',
             'name.max'=> 'Họ và tên quá dài!',
+            'email.required' => 'Email không được bỏ trống!',
+            'email.email' => 'Email không đúng định dạng',
             'phone.regex' => 'Số điện thoại không đúng định dạng',
             'phone.required' => 'Số điện thoại không được bỏ trống!',
             'm_address.required' => 'Địa chỉ không được bỏ trống!'
@@ -164,6 +161,9 @@ class UserController extends Controller
         $updated->m_address = $request->m_address;
         if($updated->save()){
             return redirect()->back()->with('alert_success', 'Cập nhật thông tin thành công.');}
+        else{
+            return redirect()->back()->with('alert_success', 'Thất bại!');
+        }
     }
 
     // Xóa tài khoản
