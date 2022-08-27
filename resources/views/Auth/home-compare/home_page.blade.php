@@ -123,7 +123,7 @@
                             </div>
                             <div class="policy-content">
                                 <h5 class="policy-title">MIỄN PHÍ VẬN CHUYỂN</h5>
-                                <p class="policy-desc">Giao hàng miễn phí cho tất cả các đơn đặt hàng</p>
+                                <p class="policy-desc">Giao hàng miễn phí cho các đơn hàng nội thành </p>
                             </div>
                         </div>
                     </div>
@@ -150,8 +150,8 @@
                                 <img src="{{ URL::asset('Auth/img/icon/policy-3.png') }}" alt="policy icon">
                             </div>
                             <div class="policy-content">
-                                <h5 class="policy-title">TIỀN TRẢ LẠI</h5>
-                                <p class="policy-desc">Đảm bảo trở lại dưới 5 ngày nếu có kỳ vấn đề nào xảy ra</p>
+                                <h5 class="policy-title">CHÍNH SÁCH ĐỔI TRẢ</h5>
+                                <p class="policy-desc">Đổi trả miễn phí trong 5 ngày</p></p>
                             </div>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
                                     <div class="product-content">
                                         <h5 class="product-name">
                                             <a
-                                                href="{{ route('productdetails', $myProductItem->m_product_slug) }}">{{ $myProductItem->m_product_name }}</a>
+                                                href="{{ route('productdetails', $myProductItem->m_product_slug) }}">{{ Str::length($myProductItem->m_product_name) > 30 ? Str::substr($myProductItem->m_product_name, 0, 30) . '...' : $myProductItem->m_product_name  }}</a>
                                         </h5>
                                         <div class="price-box">
                                             <div class="price-regular">
@@ -264,8 +264,8 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="section-title text-center">
-                            <h2 class="title">sản phẩm bán chạy</h2>
-                            <!-- <p class="sub-title">Lorem ipsum dolor sit amet consectetur adipisicing</p> -->
+                            <h2 class="title">Sản phẩm bán chạy</h2>
+                            {{-- <p class="sub-title"></p> --}}
                         </div>
                     </div>
                 </div>
@@ -365,8 +365,8 @@
                                             </a>
                                         </h5>
                                         <ul class="blog-meta">
-                                            <li><span>By: </span>{{ $blogItem->user->name }}</li>
-                                            <li><span>On: </span>{{ $blogItem->created_at->format('d/m/Y') }}</li>
+                                            <li><span>Tác giả: </span>{{ $blogItem->user->name }}</li>
+                                            <li><span>Thời gian: </span>{{ $blogItem->created_at->format('d/m/Y') }}</li>
                                         </ul>
                                         <a href="{{ route('blog-detail', $blogItem->m_slug) }}" class="read-more">Đọc
                                             ngay...</a>

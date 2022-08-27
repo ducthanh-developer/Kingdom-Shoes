@@ -54,7 +54,7 @@
                             <th>KHÁCH HÀNG</th>
                             <th with="40%">NỘI DUNG</th>
                             <th>ID SẢN PHẨM</th>
-                            <th with="10%">NGÀY BÌNH LUẬN</th>
+                            <th with="10%">THỜI GIAN CẬP NHẬT</th>
                             <th>DUYỆT</th>
                             <th>TRẢ LỜI</th>
                             <th>XÓA</th>
@@ -183,8 +183,6 @@
 
 </div> <!-- container-fluid -->
 @push('scripts')
- <script src="{{URL::asset('admin/assets/js/jquery/jquery-3.6.0.min.js')}}"></script>
  <script src="{{URL::asset('admin/assets/js/jquery/load_model.js')}}"></script>
- <script src="sweetalert2.all.min.js"></script>
 @endpush
 @endsection

@@ -47,13 +47,13 @@
                         <div class="main-menu-area">
                             <div class="main-menu">
                                 <!-- main menu navbar start -->
-                                <nav class="desktop-menu">
+                                <nav class="desktop-menu" id="desktop-menu">
                                     <ul>
-                                        <li class="active"><a href="{{ route('home') }}">Trang chủ</a>
+                                        <li ><a href="{{ route('home') }}">Trang chủ</a>
                                         </li>
                                         <li><a href="/product_list">Cửa hàng <i class="fa fa-angle-down"></i></a>
 
-                                        <li><a href="/product_list">Danh mục <i class="fa fa-angle-down"></i> </a>
+                                        <li><a href="javascript:void(0)">Danh mục <i class="fa fa-angle-down"></i> </a>
                                             <ul class="dropdown">
                                                 @foreach ($categories as $category)
                                                 <li><a href="{{ route('categoryProduct', ['id' => $category->id]) }}">{{ $category->m_title }}<i class="fa fa-angle-right"></i></a>

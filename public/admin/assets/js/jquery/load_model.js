@@ -35,12 +35,12 @@ $(document).ready(function(){
                 console.log(data);
                 if(data == 'done')
                 {
-                    alert('bạn đã thay đổi trạng thái');
+                    alert('Bạn đã thay đổi trạng thái');
                     location.reload();
                 }
                 else
                 {
-                    alert('gặp lỗi rồi !');
+                    alert('Gặp lỗi rồi !');
                 }
             }
         });

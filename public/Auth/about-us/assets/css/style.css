@@ -1605,7 +1605,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 
 .main-menu ul li {
   display: inline-block;
-  margin-right: 30px;
+  margin-right: 0;
   position: relative;
 }
 .main-menu ul li:last-child {
@@ -1618,7 +1618,6 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   color: #333;
   font-size: 16px;
   font-weight: 600;
-  padding: 40px 0 !important;
 }
 .main-menu ul li a:hover {
   color: #fb7832;

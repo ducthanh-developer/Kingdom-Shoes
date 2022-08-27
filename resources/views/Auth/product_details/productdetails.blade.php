@@ -1,6 +1,62 @@
 @extends('Auth.layouts.master')
 @push('scripts')
     <script>
+        //Sản phẩm yêu thích FE của Yến
+        $(document).ready(function() {
+            $('.ion-android-favorite-outline').click(function(event) {
+                event.preventDefault();
+                var idProduct = $(this).data('id');
+                var listproductStorage = localStorage.getItem('product');
+                var josnListproductStorage = JSON.parse(listproductStorage);
+                if (josnListproductStorage && josnListproductStorage.length > 0) {
+                    var result = josnListproductStorage.find(item => item.id === idProduct);
+                    if (result) {
+                        toastr.error('', "Sản phẩm này đã được chọn");
+                    } else {
+                        $.ajax({
+                            type: "post",
+                            url: "/product-favourite",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                'idProduct': idProduct,
+                            },
+                            success: function(response) {
+                                let clientsArr = JSON.parse(localStorage.getItem('product')) ||
+                                    [];
+                                clientsArr.push(response.data);
+                                localStorage.setItem('product', JSON.stringify(clientsArr));
+                                toastr.success('',
+                                    'Chọn sản phẩm yêu thích thành công')
+                            },
+                            error: function(error) {
+                                toastr.error('', error);
+                            }
+                        });
+                    }
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "/product-favourite",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'idProduct': idProduct,
+                        },
+                        success: function(response) {
+                            let clientsArr = JSON.parse(localStorage.getItem('product')) || [];
+                            clientsArr.push(response.data);
+                            localStorage.setItem('product', JSON.stringify(clientsArr));
+                            toastr.success('',
+                                'Chọn sản phẩm yêu thích thành công')
+                        },
+                        error: function(error) {
+                            toastr.error('', error);
+                        }
+                    });
+                }
+
+            });
+        });
+
         $('.cart-info').submit(function(e) {
             e.preventDefault();
             let data = new FormData(this);
@@ -26,7 +82,7 @@
 
         $('.add-cart').click(function(e) {
             e.preventDefault();
-            $('.cart-info').submit();
+            $(this).next('.cart-info').submit();
         });
 
         $('.nice-select.size').change(function(e) {
@@ -120,18 +176,13 @@
                                                 </div>
                                                 <a href="#" class="btn btn-default add-cart disabled">Thêm vào giỏ
                                                     hàng</a>
+                                                <form action="" method="post" class="cart-info">
+                                                    @csrf
+                                                    <input type="hidden" name="productId" value="{{ $showdetail->id }}">
+                                                    <input type="hidden" name="sizeId">
+                                                </form>
                                             </div>
-                                            <form action="" method="post" class="cart-info">
-                                                @csrf
-                                                <input type="hidden" name="productId" value="{{ $showdetail->id }}">
-                                                <input type="hidden" name="sizeId">
-                                            </form>
-                                            {{-- <div class="color-option mb-20">
-                                        <h5 class="cat-title">Tổng lượng tồn kho :</h5>
-                                        @if (isset($showdetail->updatedsoluong->m_quanti))
-                                            <span>{{$showdetail->updatedsoluong->sum('m_quanti')}}</span>
-                                        @endif
-                                    </div> --}}
+
                                             <div class="availability mb-20">
                                                 <h5 class="cat-title">Size :</h5>
                                                 <select class="nice-select size">
@@ -285,17 +336,17 @@
                                                     </div>
                                                 @endforeach
                                                 <!-- <div class="form-group row">
-                                                                <div class="col">
-                                                                    <label class="col-form-label"><span class="text-danger">*</span> Họ và tên</label>
-                                                                    <input type="text" class="form-control" required>
+                                                                    <div class="col">
+                                                                        <label class="col-form-label"><span class="text-danger">*</span> Họ và tên</label>
+                                                                        <input type="text" class="form-control" required>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group row">
-                                                                <div class="col">
-                                                                    <label class="col-form-label"><span class="text-danger">*</span> Email</label>
-                                                                    <input type="email" class="form-control" required>
-                                                                </div>
-                                                            </div> -->
+                                                                <div class="form-group row">
+                                                                    <div class="col">
+                                                                        <label class="col-form-label"><span class="text-danger">*</span> Email</label>
+                                                                        <input type="email" class="form-control" required>
+                                                                    </div>
+                                                                </div> -->
                                                 <div class="form-group row">
                                                     <div class="col">
                                                         <label class="col-form-label"><span class="text-danger">*</span>
@@ -308,16 +359,16 @@
                                                         <label class="col-form-label"><span class="text-danger">*</span>
                                                             Đánh giá</label>
                                                         <!-- &nbsp;&nbsp;&nbsp; Tệ&nbsp;
-                                                                    <input type="radio" value="1" name="rating" id="rating">
-                                                                    &nbsp;
-                                                                    <input type="radio" value="2" name="rating" id="rating">
-                                                                    &nbsp;
-                                                                    <input type="radio" value="3" name="rating" id="rating">
-                                                                    &nbsp;
-                                                                    <input type="radio" value="4" name="rating" id="rating">
-                                                                    &nbsp;
-                                                                    <input type="radio" value="5" name="rating" id="rating">
-                                                                    &nbsp;Rất tốt -->
+                                                                        <input type="radio" value="1" name="rating" id="rating">
+                                                                        &nbsp;
+                                                                        <input type="radio" value="2" name="rating" id="rating">
+                                                                        &nbsp;
+                                                                        <input type="radio" value="3" name="rating" id="rating">
+                                                                        &nbsp;
+                                                                        <input type="radio" value="4" name="rating" id="rating">
+                                                                        &nbsp;
+                                                                        <input type="radio" value="5" name="rating" id="rating">
+                                                                        &nbsp;Rất tốt -->
                                                         <select class="form-control" id="rating" style="width:100px">
                                                             <option value="1">1 sao</option>
                                                             <option value="2">2 sao</option>
@@ -377,7 +428,7 @@
                                                         <div class="product-content">
                                                             <h5 class="product-name">
                                                                 <a
-                                                                    href="{{ route('productdetails', $showrelated->m_product_slug) }}">{{ Str::length($showrelated->m_product_name) > 10 ? Str::substr($showrelated->m_product_name, 0, 15) . '...' : $showrelated->m_product_name }}</a>
+                                                                    href="{{ route('productdetails', $showrelated->m_product_slug) }}">{{ Str::length($showrelated->m_product_name) > 30 ? Str::substr($showrelated->m_product_name, 0, 30) . '...' : $showrelated->m_product_name }}</a>
                                                             </h5>
                                                             <div class="price-box">
                                                                 <span
@@ -387,9 +438,9 @@
                                                                         <sup>&#8363;</sup></del></span>
                                                             </div>
                                                             <div class="product-action-link">
-                                                                <a href="#" data-toggle="tooltip" title="Wishlist"><i
+                                                                <a href="#" data-toggle="tooltip" title="Yêu thích"><i
                                                                         class="ion-android-favorite-outline"></i></a>
-                                                                <a href="#" data-toggle="tooltip"
+                                                                <a href="#" data-toggle="tooltip" style="display: none"
                                                                     title="Thêm vào giỏ hàng"><i class="ion-bag"></i></a>
                                                                 <a href="#" data-toggle="modal"
                                                                     data-target="#quick_view{{ $showrelated->id }}"> <span
@@ -462,17 +513,30 @@
                                             <p>{!! $showrelated->m_short_description !!}</p>
                                             <div class="quantity-cart-box d-flex align-items-center mb-20">
                                                 <div class="quantity">
-                                                    <div class="pro-qty"><input type="text" value="1"></div>
+                                                    <div class="pro-qty"><input type="text" name="quantity"
+                                                            value="1"></div>
                                                 </div>
-                                                <a href="cart.html" class="btn btn-default">Thêm vào giỏ hàng</a>
+                                                <a href="#" class="btn btn-default add-cart disabled">Thêm vào giỏ
+                                                    hàng</a>
+                                                <form action="" method="post" class="cart-info">
+                                                    @csrf
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <input type="hidden" name="productId" value="{{ $showrelated->id }}">
+                                                    <input type="hidden" name="sizeId">
+                                                </form>
                                             </div>
                                             <div class="availability mb-20">
-                                                <h5 class="cat-title">Tình trạng: </h5>
-                                                @if ($showrelated->m_buy > 0)
-                                                    <span>Còn hàng</span>
-                                                @else
-                                                    <span style="color:red">Hết hàng</span>
-                                                @endif
+                                                <h5 class="cat-title">Size: </h5>
+                                                <select class="nice-select size" style="width: 100px">
+                                                    <option value="">Chọn size</option>
+                                                    @foreach ($showsize as $shows)
+                                                        @if ($shows->m_quanti > 0)
+                                                            <option value="{{ $shows->id }}"><b>{{ $shows->m_size }}</b>
+                                                                - Số
+                                                                lượng: {{ $shows->m_quanti }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="share-icon">
                                                 <h5 class="cat-title">Chia sẻ:</h5>

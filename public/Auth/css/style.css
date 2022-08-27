@@ -652,7 +652,7 @@ fieldset {
     .main-menu ul li:hover > a, .main-menu ul li.active > a {
       color: #e3a51e; }
     .main-menu ul li ul.dropdown {
-      top: 100%;
+      top: 70%;
       left: 0;
       width: 220px;
       position: absolute;

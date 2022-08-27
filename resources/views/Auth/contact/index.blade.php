@@ -36,34 +36,34 @@
                                 @csrf()
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                        <input name="name" placeholder="Họ tên *" type="text">
+                                        <input name="name" placeholder="Họ tên *" type="text" style="margin-bottom: 0">
                                         @if ($errors->has('name'))
-                                            <span style="font-size: 12px;" class="text-danger">{{ $errors->first('name') }}</span>
+                                            <span style="font-size: 14px;" class="text-danger">{{ $errors->first('name') }}</span>
                                         @endif
                                     </div>
                                     <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                        <input name="phone" placeholder="Số điện thoại *" type="text">
+                                        <input name="phone" placeholder="Số điện thoại *" type="text" style="margin-bottom: 0">
                                         @if ($errors->has('phone'))
-                                            <span style="font-size: 12px;" class="text-danger">{{ $errors->first('phone') }}</span>
+                                            <span style="font-size: 14px;" class="text-danger">{{ $errors->first('phone') }}</span>
                                         @endif
                                     </div>
                                     <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                        <input name="email" placeholder="Email *" type="text">
+                                        <input name="email" placeholder="Email *" type="text" style="margin-bottom: 0">
                                         @if ($errors->has('email'))
-                                            <span style="font-size: 12px;" class="text-danger">{{ $errors->first('email') }}</span>
+                                            <span style="font-size: 14px;" class="text-danger">{{ $errors->first('email') }}</span>
                                         @endif
                                     </div>
                                     <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                        <input name="title" placeholder="Tiêu đề *" type="text">
+                                        <input name="title" placeholder="Tiêu đề *" type="text" style="margin-bottom: 0">
                                         @if ($errors->has('title'))
-                                            <span style="font-size: 12px;" class="text-danger">{{ $errors->first('title') }}</span>
+                                            <span style="font-size: 14px;" class="text-danger">{{ $errors->first('title') }}</span>
                                         @endif
                                     </div>
                                     <div class="col-12">
-                                        <div class="contact2-textarea text-center">
-                                            <textarea placeholder="Nội dung *" name="message" class="form-control2"></textarea>
+                                        <div class="contact2-textarea">
+                                            <textarea placeholder="Nội dung *" name="message" class="form-control2" style="margin-bottom: 0"></textarea>
                                             @if ($errors->has('message'))
-                                                <span style="font-size: 12px;" class="text-danger">{{ $errors->first('message') }}</span>
+                                                <span style="font-size: 14px;" class="text-danger">{{ $errors->first('message') }}</span>
                                             @endif
                                         </div>
                                         @if(session()->has('message_success'))

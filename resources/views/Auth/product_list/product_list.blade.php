@@ -166,12 +166,12 @@ Danh sách sản phẩm
                                         <div class="price-range" data-min="0" data-max="2000000"></div>
                                         <div class="range-slider">
                                             <form action="#">
-                                                <div class="price-input">
+                                                <div class="price-input d-flex">
                                                     <label for="amount">Giá: </label>
                                                     <input type="text" id="minamount" name="minamount">
                                                     <input type="text" id="maxamount" name="maxamount">
                                                 </div>
-                                                <button class="filter-btn">Lọc</button>
+                                                <button class="filter-btn mb-3">Lọc</button>
                                                 <br>
                                             </form>
                                         </div>
@@ -184,7 +184,7 @@ Danh sách sản phẩm
                         <!-- single sidebar start -->
                         <div class="sidebar-single">
                             <div class="sidebar-banner">
-                                <a href="#">
+                                <a href="http://127.0.0.1:8000/chi-tiet-san-pham/giay-tennis-nam-reebok-royal-techque-t-gz5684.html">
                                     <img src="{{ URL::asset('Auth/img/banner/banner_left.jpg') }}" alt="">
                                 </a>
                             </div>
@@ -224,7 +224,7 @@ Danh sách sản phẩm
                                                 <option value="{{ Request::url() }}?danhsach=moicapnhat">Mới cập nhật
                                                 </option>
                                             </select>
-                                            <button class="btn btn-sm-primary" id="locsanpham">lọc</button>
+                                            <button class="btn btn-sm-primary ml-3" id="locsanpham">lọc</button>
 
                                         </div>
                                         <!-- <div class="product-amount">
@@ -383,19 +383,8 @@ Danh sách sản phẩm
                                         @endif
                                         @endforeach
                                     </select>
-                                    {{-- @if ($showprd->m_buy > 0)
-                                                <span>Còn hàng</span>
-                                            @else
-                                                <span style="color:red">Hết hàng</span>
-                                            @endif --}}
                                 </div>
-                                <div class="share-icon">
-                                    <h5 class="cat-title">Chia sẻ:</h5>
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest"></i></a>
-                                    <a href="#"><i class="fa fa-google-plus"></i></a>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>

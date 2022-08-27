@@ -18,8 +18,6 @@
         $('#form-insert').submit(function(e) {
             e.preventDefault();
             let data = new FormData(this);
-            // let date = new Date($('input[name=coupon_expired]').val());
-            // data.set('coupon_expired', moment(date).format('YYYY/MM/DD'))
             $.ajax({
                 type: "post",
                 url: "{{ route('save-coupon') }}",

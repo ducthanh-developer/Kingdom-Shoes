@@ -190,8 +190,8 @@
                     </p>
                     <ul class="list-inline">
                         <li class="list-inline-item">
-                            <a href="#" class="text-muted">
-                                <i class="mdi mdi-cog"></i>
+                            <a href="{{route('home')}}" class="text-muted">
+                                <i class="fe-home"></i>
                             </a>
                         </li>
 
@@ -285,7 +285,7 @@
                         </li>
                         <li>
                             <a href="javascript: void(0);">
-                                <i class="mdi mdi-view-dashboard"></i>
+                                <i class="mdi mdi-postage-stamp"></i>
                                 <span> Quản lí slider </span>
                                 <span class="menu-arrow"></span>
                             </a>
@@ -296,7 +296,7 @@
                         </li>
                         <li>
                             <a href='{{ route('order') }}'>
-                                <i class="mdi mdi-view-dashboard"></i>
+                                <i class="mdi mdi-shopping"></i>
                                 <span> QL Đơn Hàng</span>
                             </a>
                         </li>

@@ -94,7 +94,7 @@ class HomeController extends Controller
         $showproductdetailget = product::where('id', $showproductdetail->id)->where('m_status', 1)->get();
         $showsize = product_inventory::where('m_id_product', $showproductdetail->id)->get();
         $showproductrelated  = product::where('m_id_category', $showcategoryid->id)->where('id','!=',$showproductdetail->id)->inRandomOrder()->where('m_status', 1)->take(8)->get();
-        $showcomment = Cmt_product::where('m_id_maloai', $showproductdetail->id)->get();
+        $showcomment = Cmt_product::where('m_id_maloai', $showproductdetail->id)->where('m_status', 1)->get();
 
         return view('Auth.product_details.productdetails', compact('showproductdetail','showproductdetailget','showsize','showproductrelated','showcomment'));
     }

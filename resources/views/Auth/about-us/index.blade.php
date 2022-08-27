@@ -3,21 +3,10 @@
     Về chúng tôi
 @endsection
 @push('styles')
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{asset('Auth/about-us/assets/css/bootstrap.min.css')}}">
-    
-    <!-- Fonts CSS -->
-    <link rel="stylesheet" href="{{asset('Auth/about-us/assets/css/icofont.min.css')}}}">
-    <link rel="stylesheet" href="{{asset('Auth/about-us/assets/css/Pe-icon-7-stroke.css')}}">
-    
-    <!-- Plugins CSS -->
-    <link rel="stylesheet" href="assets/css/plugins.css">
     
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="{{asset('Auth/about-us/assets/css/style.css')}}">
-    
-    <!-- Modernizer JS -->
-    <script src="{{asset('Auth/about-us/assets/js/vendor/modernizr-2.8.3.min.js')}}"></script>
+
 @endpush
 @section('content')
 <!-- breadcrumb area start -->

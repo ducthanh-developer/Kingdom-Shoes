@@ -22,7 +22,7 @@ class DashboardController extends Controller
     //         'title' => 'Thống kê',
     //         'action'=> 'dashboard'
     //     ];
-        
+
 
     //     if(!Auth::guest()){
     //         return redirect()->route('admintrator');
@@ -31,10 +31,10 @@ class DashboardController extends Controller
     //     }
     // }
     public function index()
-    {   
+    {
         $data = [
             'title' => 'Thống kê',
-            'action'=> 'dashboard'
+            'action' => 'dashboard'
         ];
         $tongsanpham = product::all();
         $tongdanhmuc = categoryModel::all();
@@ -44,43 +44,47 @@ class DashboardController extends Controller
         $cmtproduct3sao = Cmt_Product::where('ratings', 3)->get()->count();
         $cmtproduct2sao = Cmt_Product::where('ratings', 2)->get()->count();
         $cmtproduct1sao = Cmt_Product::where('ratings', 1)->get()->count();
-        $showcmtganday = Cmt_Product::orderBy('idbl','desc')->take(5)->get();
+        $showcmtganday = Cmt_Product::orderBy('idbl', 'desc')->take(5)->get();
         $sub14day = Carbon::now('Asia/Ho_Chi_Minh')->subDays(30);
         $now = Carbon::now('Asia/Ho_Chi_Minh');
-        $tongdonhang = OrderModel::whereBetween('updated_at',[$sub14day,$now])->get();
-        $showdonhangganday = OrderModel::orderBy('id','desc')->take(5)->get();
-        return view('admin.dashboard',compact('data','tongsanpham','tongdanhmuc','tongdonhang','cmtproduct','cmtproduct5sao','cmtproduct4sao','cmtproduct3sao','cmtproduct2sao','cmtproduct1sao','showcmtganday','showdonhangganday'));
+        $tongdonhang = OrderModel::whereBetween('updated_at', [$sub14day, $now])->get();
+        $showdonhangganday = OrderModel::orderBy('id', 'desc')->take(5)->get();
+        return view('admin.dashboard', compact('data', 'tongsanpham', 'tongdanhmuc', 'tongdonhang', 'cmtproduct', 'cmtproduct5sao', 'cmtproduct4sao', 'cmtproduct3sao', 'cmtproduct2sao', 'cmtproduct1sao', 'showcmtganday', 'showdonhangganday'));
     }
-    public function file(){
+    public function file()
+    {
         $data = [
             'title' => 'file Hình',
-            'action'=> 'file'
-        ]; 
-        return view('admin.file',compact('data'));
+            'action' => 'file'
+        ];
+        return view('admin.file', compact('data'));
     }
 
-    public function orderdate(Request $request){
+    public function orderdate(Request $request)
+    {
         $sub7day = Carbon::now('Asia/Ho_Chi_Minh')->subDays(7);
-        $now = Carbon::now('Asia/Ho_Chi_Minh'); 
-        $get = OrderModel::whereBetween('updated_at', [$sub7day,$now])->orderBy('updated_at','ASC')->get();
-        foreach($get as $val)
-        {
+        $now = Carbon::now('Asia/Ho_Chi_Minh');
+        $get = OrderModel::whereBetween('updated_at', [$sub7day, $now])->orderBy('updated_at', 'ASC')->get();
+        foreach ($get as $val) {
             $chart_data[] = array(
                 'name' => $val->m_name,
                 'tongtien' => $val->m_total_price,
             );
         }
-            echo $data = json_encode($chart_data);
+        echo $data = json_encode($chart_data);
     }
 
     public function filterdate(Request $request)
     {
         $data = $request->all();
-        $from_date = $data['from_date'].' 23:59:59';
-        $to_date = $data['to_date'].' 23:59:59';
-        $get = OrderModel::whereBetween('updated_at', [$from_date,$to_date])->orderBy('updated_at','ASC')->get();
-        foreach($get as $val)
-        {
+        $from_date = $data['from_date'];
+        $to_date = $data['to_date'];
+        $chart_data[] = array(
+            'name' => '',
+            'tongtien' => 0,
+        );
+        $get = OrderModel::whereBetween('updated_at', [$from_date, $to_date])->orderBy('updated_at', 'ASC')->get();
+        foreach ($get as $val) {
 
             $chart_data[] = array(
                 'name' => $val->m_name,
