@@ -20,7 +20,7 @@
                                     <td class="pro-thumbnail"><a href="{{ url('chi-tiet-san-pham') }}/${data[key].options.slug}"><img class="img-fluid"
                                                 src="{{ asset('uploads') }}/${data[key].options.image}"
                                                 alt="Product" /></a></td>
-                                    <td class="pro-title"><a href="{{ url('chi-tiet-san-pham') }}/${data[key].options.slug}">${data[key].name}</a></td>
+                                    <td class="pro-title"><a href="{{ url('chi-tiet-san-pham') }}/${data[key].options.slug}">${data[key].name + ' - Size: ' + data[key].options.sizeName}</a></td>
                                     <td class="pro-price" id="price" data-price="${data[key].price}"><span>${data[key].price.toLocaleString('en-US')}</span></td>
                                     <td class="pro-quantity">
                                         <div class="pro-qty">

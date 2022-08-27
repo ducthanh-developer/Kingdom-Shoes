@@ -30,7 +30,7 @@
                             </div>
                             <div class="minicart-content">
                                 <h3 class="product-name">
-                                    <a href="{{url('chi-tiet-san-pham')}}/${data[key].options.slug}">${data[key].name}</a>
+                                    <a href="{{url('chi-tiet-san-pham')}}/${data[key].options.slug}">${data[key].name + ' - Size: ' + data[key].options.sizeName}</a>
                                 </h3>
                                 <p>
                                     <span class="cart-quantity">${data[key].qty}<strong>&times;</strong></span>

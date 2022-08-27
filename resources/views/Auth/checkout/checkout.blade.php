@@ -1,6 +1,14 @@
 @extends('Auth.layouts.master')
 @push('scripts')
     <script>
+        function showPass() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
         let payMethod = "cash";
         let pro = "";
         let dis = "";
@@ -22,7 +30,7 @@
             totalGlobal = total.replace(/,/g, '');
             for (let key in data) {
                 content += `<tr>
-                                <td><a href="{{ url('chi-tiet-san-pham') }}/${data[key].options.slug}">${data[key].name} <strong> × ${data[key].qty}</strong></a>
+                                <td><a href="{{ url('chi-tiet-san-pham') }}/${data[key].options.slug}">${data[key].name + ' - Size: ' + data[key].options.sizeName} <strong> × ${data[key].qty}</strong></a>
                                 </td>7
                                 <td>${(data[key].price * data[key].qty).toLocaleString('en-US') }</td>
                             </tr>`
@@ -243,63 +251,71 @@
                                                 và thanh toán.</p>
                                             <div class="login-reg-form-wrap mt-20">
                                                 <div class="row">
-                                                    <div class="col-lg-7 m-auto">
-                                                        <form method="POST" action="{{ route('login') }}">
-                                                            @csrf
-                                                            <div class="single-input-item">
-                                                                <label for="">{{ __('Email     ') }}</label>
-                                                                <input class="@error('email') is-invalid @enderror"
-                                                                    id="email" type="emai" name="email"
-                                                                    value="{{ old('email') }}" autocomplete="email"
-                                                                    autofocus placeholder="Email/Tên đăng nhập" />
-                                                                @error('email')
-                                                                    <span class="invalid-feedback input-group-text"
-                                                                        role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
+                                                    <div class="col-lg-10 mx-auto">
+                                                        <div class="login-reg-form-wrap">
+                                                            <h2>Đăng nhập</h2>
+                                                            <form method="POST" action="{{ route('login') }}">
+                                                                @csrf
+                                                                <div class="single-input-item">
+                                                                    <label for="">{{ __('Email     ') }}</label>
+                                                                    <input class="@error('email') is-invalid @enderror"
+                                                                        id="email" type="emai" name="email"
+                                                                        value="{{ old('email') }}" autocomplete="email"
+                                                                        autofocus placeholder="Email/Tên đăng nhập" />
+                                                                    @error('email')
+                                                                        <span class="invalid-feedback input-group-text"
+                                                                            role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </span>
+                                                                    @enderror
+                                                                </div>
 
-                                                            <div class="single-input-item">
-                                                                <label for="">{{ __('Mật khẩu ') }}</label>
-                                                                <input id="password" type="password"
-                                                                    class="@error('password') is-invalid @enderror"
-                                                                    name="password" autocomplete="current-password" />
-                                                                @error('password')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="single-input-item">
+                                                                <div class="single-input-item">
+                                                                    <label for="">{{ __('Mật khẩu ') }}</label>
+                                                                    <input id="password" type="password"
+                                                                        class="@error('password') is-invalid @enderror"
+                                                                        name="password" autocomplete="current-password" /><i
+                                                                        onclick="showPass()"
+                                                                        style="margin-left: -30px; 
+                                                                    cursor: pointer;"
+                                                                        class="fa fa-eye"></i>
+                                                                    @error('password')
+                                                                        <span class="invalid-feedback" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </span>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="single-input-item">
+                                                                    <div
+                                                                        class="login-reg-form-meta d-flex align-items-center justify-content-between">
+                                                                        <div class="remember-meta">
+                                                                            <div class="custom-control">
+                                                                                <input style="width: 20px"
+                                                                                    class="form-check-input" type="checkbox"
+                                                                                    name="remember" id="remember"
+                                                                                    {{ old('remember') ? 'checked' : '' }}>
+                                                                                <label class="form-check-label"
+                                                                                    for="rememberMe">{{ __('Ghi nhớ tài khoản!') }}</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        @if (Route::has('password.request'))
+                                                                            <a href="{{ route('password.request') }}"
+                                                                                class="forget-pwd">Quên mật khẩu</a>
+                                                                        @endif
+
+                                                                    </div>
+                                                                </div>
                                                                 <div
                                                                     class="login-reg-form-meta d-flex align-items-center justify-content-between">
-                                                                    <div class="remember-meta">
-                                                                        <div class="custom-control custom-checkbox">
-                                                                            <input class="form-check-input" type="checkbox"
-                                                                                name="remember" id="remember"
-                                                                                {{ old('remember') ? 'checked' : '' }}>
-                                                                            <label class="custom-control-label"
-                                                                                for="rememberMe">{{ __('Ghi nhớ tài khoản!') }}</label>
-                                                                        </div>
+                                                                    <div class="single-input-item">
+                                                                        <button type="submit" class="btn">
+                                                                            {{ __('Đăng nhập') }}</button>
                                                                     </div>
-                                                                    @if (Route::has('password.request'))
-                                                                        <a href="{{ route('password.request') }}"
-                                                                            class="forget-pwd">Quên mật khẩu</a>
-                                                                    @endif
-
+                                                                    <p>Chưa có tài khoản? <a href="{{ route('register') }}"
+                                                                            class="forget-pwd">Đăng ký</a></p>
                                                                 </div>
-                                                            </div>
-                                                            <div
-                                                                class="login-reg-form-meta d-flex align-items-center justify-content-between">
-                                                                <div class="single-input-item">
-                                                                    <button type="submit" class="btn">
-                                                                        {{ __('Đăng nhập') }}</button>
-                                                                </div>
-                                                                <p>Chưa có tài khoản? <a href="{{ route('register') }}"
-                                                                        class="forget-pwd">Đăng ký</a></p>
-                                                            </div>
-                                                        </form>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

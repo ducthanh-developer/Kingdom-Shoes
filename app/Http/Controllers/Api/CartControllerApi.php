@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\product;
+use App\Models\product_inventory;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ class CartControllerApi extends Controller
     {
         $id = $request->productId;
         $product = product::find($id);
+        $size = product_inventory::find($request->sizeId);
         if($product == null || $product->m_status != 1){
             return ["isError" => true, "message" => "Sản phẩm không tồn tại, vui lòng chọn sản phẩm khác"];
         }
@@ -48,6 +50,7 @@ class CartControllerApi extends Controller
         $data['options']['image'] = $product->m_picture ? json_decode($product->m_picture)[0] : '';
         $data['options']['slug'] = $product->m_product_slug;
         $data['options']['sizeId'] = $request->sizeId;
+        $data['options']['sizeName'] = $size->m_size;
         $data['weight'] = 0;
         $result = Cart::add($data);
         return ["isError" => false, "message" => "Thêm giỏ hàng thành công", "data" => $result];
