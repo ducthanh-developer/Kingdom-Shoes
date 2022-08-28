@@ -17,52 +17,30 @@ Danh mục sản phẩm
         $('.ion-android-favorite-outline').click(function(event) {
             event.preventDefault();
             var idProduct = $(this).data('id');
-            var listproductStorage = localStorage.getItem('product');
-            var josnListproductStorage = JSON.parse(listproductStorage);
-            if (josnListproductStorage && josnListproductStorage.length > 0) {
-                var result = josnListproductStorage.find(item => item.id === idProduct);
-                if (result) {
-                    toastr.error('', "Sản phẩm này đã được chọn");
-                } else {
-                    $.ajax({
-                        type: "post",
-                        url: "/product-favourite",
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            'idProduct': idProduct,
-                        },
-                        success: function(response) {
-                            let clientsArr = JSON.parse(localStorage.getItem('product')) || [];
-                            clientsArr.push(response.data);
-                            localStorage.setItem('product', JSON.stringify(clientsArr));
-                            toastr.success('',
-                                'Chọn sản phẩm yêu thích thành công')
-                        },
-                        error: function(error) {
-                            toastr.error('', error);
-                        }
-                    });
-                }
-            } else {
-                $.ajax({
-                    type: "post",
-                    url: "/product-favourite",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        'idProduct': idProduct,
-                    },
-                    success: function(response) {
-                        let clientsArr = JSON.parse(localStorage.getItem('product')) || [];
-                        clientsArr.push(response.data);
-                        localStorage.setItem('product', JSON.stringify(clientsArr));
+            $("#product-favourite-" + idProduct).addClass("active-favourite");
+            $.ajax({
+                type: "post",
+                url: "/product-favourite",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'idProduct': idProduct,
+                },
+                success: function(response) {
+                    // console.log(response);
+                    // toastr.success('',
+                    //     'Chọn sản phẩm yêu thích thành công')
+                    if (response.status == 200) {
                         toastr.success('',
-                            'Chọn sản phẩm yêu thích thành công')
-                    },
-                    error: function(error) {
-                        toastr.error('', error);
+                            response.message)
+                    } else {
+                        toastr.error('',
+                            response.message)
                     }
-                });
-            }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
 
         });
     });
@@ -132,7 +110,7 @@ Danh mục sản phẩm
                             <div class="sidebar-body">
                                 <ul class="color-list">
                                     @foreach($categories as $cate)
-                                    <li><a href="{{URL::to('/product_list/'.$cate->id)}}">{{$cate->m_title}} <span>({{$cate->tongproduct->count()}})</span></a></li>
+                                        <li><a href="{{URL::to('/product_list/'.$cate->id)}}">{{$cate->m_title}} <span>({{$cate->tongproduct->count()}})</span></a></li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -222,27 +200,27 @@ Danh mục sản phẩm
                                     </div>
                                     <div class="product-content">
                                         <h5 class="product-name">
-                                            <a href="{{ route('productdetails', $showprd->m_product_slug) }}">{{ $showprd->m_product_name }}</a>
+                                            <a href="{{ route('productdetails', $showprd->m_product_slug) }}">{{ Str::length($showprd->m_product_name) > 30 ? Str::substr($showprd->m_product_name, 0, 30) . '...' : $showprd->m_product_name }}</a>
                                         </h5>
                                         <div class="price-box">
                                             <span class="price-regular">{{ number_format($showprd->m_original_price, 0, ',', '.') }}VND</span>
                                             <span class="price-old"><del>{{ number_format($showprd->m_price, 0, ',', '.') }}VND</del></span>
                                         </div>
                                         <div class="product-action-link">
-                                            <a href="javascript:void(0);" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yên Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
+                                            <a href="javascript:void(0);" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yêu Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
                                             @if(isset($list_favourite))
                                             @foreach($list_favourite as $item)
                                             @if($item->id_product == $showprd->id)
-                                            <a href="javascript:void(0);" class="active-favourite" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yên Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
+                                            <a href="javascript:void(0);" class="active-favourite" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yêu Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
                                             @elseif($item->id_product != $showprd->id)
-                                            <a href="javascript:void(0);" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yên Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
+                                            <a href="javascript:void(0);" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yêu Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
                                             @else
-                                            <a href="javascript:void(0);" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yên Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
+                                            <a href="javascript:void(0);" data-id="{{$showprd->id}}" id="product-favourite-{{$showprd->id}}" data-toggle="tooltip" title="Yêu Thích"><i data-id="{{$showprd->id}}" class="ion-android-favorite-outline product-{{$showprd->id}}"></i></a>
                                             @endif
                                             @endforeach
                                             @endif
 
-                                            <a href="#" class="add-cart" data-toggle="tooltip" title="Thêm Vào Giỏ"><i class="ion-bag"></i></a>
+                                            <!-- <a href="#" class="add-cart" data-toggle="tooltip" title="Thêm Vào Giỏ"><i class="ion-bag"></i></a> -->
                                             <form action="" method="post" class="cart-info">
                                                 @csrf
                                                 <input type="hidden" name="quantity" value="1">

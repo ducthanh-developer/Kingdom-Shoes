@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cookie;
-use Session;
-use Illuminate\Http\Response;
+// use Illuminate\Support\Facades\Cookie;
+// use Session;
+// use Illuminate\Http\Response;
 
 
 class productController extends Controller
@@ -321,26 +321,66 @@ class productController extends Controller
 
 
     //chọn sản phẩm yêu thích
+    // public function productFavourite(Request $request)
+    // {
+    //     $idProduct = $request->idProduct;
+    //     $product = DB::table('t_product')->where('id', $idProduct)->first();
+    //     return response()->json([
+    //         'data' => $product,
+    //     ]);
+    // }
+
+    // public function listProductFavourite(Request $request)
+    // {
+
+    //     return view('Auth.product_list.favourite');
+    // }
+
+    // public function checkProductFavourite(Request $request) {
+    //     $list_favourite = $request->storedNames;
+    //     return redirect()->route('fav')->with( ['list_favourite' => $list_favourite] );
+    // }
     public function productFavourite(Request $request)
     {
+        if(Auth::user()) {
+            $userLogin = Auth::user()->id;
         $idProduct = $request->idProduct;
-        $product = DB::table('t_product')->where('id', $idProduct)->first();
-        return response()->json([
-            'data' => $product,
+        $checkData = DB::table('t_user_favourite')->where('id_user', $userLogin)->where('id_product', $idProduct)->first();
+        if ($checkData) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Sản phẩm này đã được chọn'
+            ]);
+        }
+        $addFavourite = DB::table('t_user_favourite')->insert([
+            'id_user' =>  $userLogin,
+            'id_product' => $idProduct
         ]);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Bạn đã chọn sản phẩm yêu thích thành công',
+            'data' =>  $addFavourite,
+        ]);
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Vui lòng đăng nhập để thực hiện chức năng này'
+            ]);
+        }
+
     }
 
-    public function listProductFavourite(Request $request)
+    public function listProductFavourite()
     {
-
-        return view('Auth.product_list.favourite');
+       if(Auth::user()) {
+        $userLogin = Auth::user()->id;
+        $list_favourite = DB::table('t_product')->join('t_user_favourite', 't_user_favourite.id_product', '=', 't_product.id')->where('t_user_favourite.id_user', $userLogin)->get();
+        return view('Auth.product_list.favourite', compact('list_favourite'));
+       } else {
+            $list_favourite = [];
+            return view('Auth.product_list.favourite', compact('list_favourite'));
+       }
     }
-
-    public function checkProductFavourite(Request $request) {
-        $list_favourite = $request->storedNames;
-        return redirect()->route('fav')->with( ['list_favourite' => $list_favourite] );
-    }
-
     //Lấy danh sách sản phẩm theo danh mục
     public function categoryProduct($id)
     {

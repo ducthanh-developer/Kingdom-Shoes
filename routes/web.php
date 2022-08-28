@@ -290,7 +290,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 //Chọn sản phẩm yêu thích
 Route::post('/product-favourite', [productController::class, 'productFavourite']);
 
-Route::post('/check-product-favourite', [productController::class, 'checkProductFavourite']);
+// Route::post('/check-product-favourite', [productController::class, 'checkProductFavourite']);
 //Danh sách sản phẩm yêu thích của user đã chọn
 Route::get('/list-product-favourite', [productController::class, 'listProductFavourite'])->name('list-favourite');
 
