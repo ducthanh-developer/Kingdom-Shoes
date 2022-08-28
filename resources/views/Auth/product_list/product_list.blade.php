@@ -17,53 +17,26 @@
             $('.ion-android-favorite-outline').click(function(event) {
                 event.preventDefault();
                 var idProduct = $(this).data('id');
-                var listproductStorage = localStorage.getItem('product');
-                // var josnListproductStorage = JSON.parse(listproductStorage);
-                // if (josnListproductStorage && josnListproductStorage.length > 0) {
-                //     var result = josnListproductStorage.find(item => item.id === idProduct);
-                //     if (result) {
-                //         toastr.error('', "Sản phẩm này đã được chọn");
-                //     } else {
-                //         $.ajax({
-                //             type: "post",
-                //             url: "/product-favourite",
-                //             data: {
-                //                 "_token": "{{ csrf_token() }}",
-                //                 'idProduct': idProduct,
-                //             },
-                //             success: function(response) {
-                //                 let clientsArr = JSON.parse(localStorage.getItem('product')) ||
-                //                     [];
-                //                 clientsArr.push(response.data);
-                //                 localStorage.setItem('product', JSON.stringify(clientsArr));
-                //                 toastr.success('',
-                //                     'Chọn sản phẩm yêu thích thành công')
-                //             },
-                //             error: function(error) {
-                //                 toastr.error('', error);
-                //             }
-                //         });
-                //     }
-                // } else {
-                //     $.ajax({
-                //         type: "post",
-                //         url: "/product-favourite",
-                //         data: {
-                //             "_token": "{{ csrf_token() }}",
-                //             'idProduct': idProduct,
-                //         },
-                //         success: function(response) {
-                //             let clientsArr = JSON.parse(localStorage.getItem('product')) || [];
-                //             clientsArr.push(response.data);
-                //             localStorage.setItem('product', JSON.stringify(clientsArr));
-                //             toastr.success('',
-                //                 'Chọn sản phẩm yêu thích thành công')
-                //         },
-                //         error: function(error) {
-                //             toastr.error('', error);
-                //         }
-                //     });
-                // }
+                $("#product-favourite-" + idProduct).addClass("active-favourite");
+                $.ajax({
+                    type: "post",
+                    url: "/product-favourite",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        'idProduct': idProduct,
+                    },
+                    success: function(response) {
+                        if (response.status == 200) {
+                            toastr.success('', response.message)
+                        } else {
+                            toastr.error('',
+                                response.message)
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
             });
         });
         $('.cart-info').submit(function(e) {
@@ -231,8 +204,8 @@
 
                                             </div>
                                             <!-- <div class="product-amount">
-                                                                            <button class="btn btn-primary" id="locsanpham">lọc</button>
-                                                                        </div> -->
+                                                                                    <button class="btn btn-primary" id="locsanpham">lọc</button>
+                                                                                </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -268,7 +241,7 @@
                                                 <div class="product-action-link">
                                                     <a href="javascript:void(0);" data-id="{{ $showprd->id }}"
                                                         id="product-favourite-{{ $showprd->id }}" data-toggle="tooltip"
-                                                        title="Yên Thích"><i data-id="{{ $showprd->id }}"
+                                                        title="Yêu Thích"><i data-id="{{ $showprd->id }}"
                                                             class="ion-android-favorite-outline product-{{ $showprd->id }}"></i></a>
                                                     <a href="#" title="Thêm Vào Giỏ Hàng" style="display: none"><i
                                                             class="ion-bag"></i></a>
