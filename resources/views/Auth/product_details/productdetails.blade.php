@@ -439,7 +439,7 @@
                                                             </div>
                                                             <div class="product-action-link">
                                                                 <a href="#" data-toggle="tooltip" title="Yêu thích"><i
-                                                                        class="ion-android-favorite-outline"></i></a>
+                                                                        class="ion-android-favorite-outline" data-id={{$showrelated->id}}></i></a>
                                                                 <a href="#" data-toggle="tooltip" style="display: none"
                                                                     title="Thêm vào giỏ hàng"><i class="ion-bag"></i></a>
                                                                 <a href="#" data-toggle="modal"
