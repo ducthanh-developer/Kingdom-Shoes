@@ -22,7 +22,7 @@
                             toastr.success('',
                                 response.message)
                         } else {
-                            toastr.success('',
+                            toastr.error('',
                                 response.message)
                         }
                     },
@@ -204,7 +204,7 @@
                                         <div class="product-action-link">
                                             <a href="javascript:void(0);" data-id="{{ $myProductItem->id }}"
                                                 id="product-favourite-{{ $myProductItem->id }}" data-toggle="tooltip"
-                                                title="Yên Thích"><i data-id="{{ $myProductItem->id }}"
+                                                title="Yêu Thích"><i data-id="{{ $myProductItem->id }}"
                                                     class="ion-android-favorite-outline product-{{ $myProductItem->id }}"></i></a>
                                             <!-- <a href="#" data-toggle="tooltip" title="Yêu Thích"><i class="ion-android-favorite-outline"></i></a> -->
                                             <a href="#" data-toggle="tooltip" title="Thêm Vào Giỏ"
@@ -308,7 +308,7 @@
                                             <div class="product-link-2">
                                                 <a href="javascript:void(0);" data-id="{{ $myProductSellItem->id }}"
                                                     id="product-favourite-{{ $myProductSellItem->id }}"
-                                                    data-toggle="tooltip" title="Yên Thích"><i
+                                                    data-toggle="tooltip" title="Yêu Thích"><i
                                                         data-id="{{ $myProductSellItem->id }}"
                                                         class="ion-android-favorite-outline product-{{ $myProductSellItem->id }}"></i></a>
                                                 {{-- <a href="#" data-toggle="tooltip" title="Thêm vào giỏ hàng"><i

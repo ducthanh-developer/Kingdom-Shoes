@@ -19,29 +19,58 @@ Danh sách sản phẩm
 @endpush
 @push('scripts')
 <script>
+    // $(document).ready(function() {
+    //     var storedNames = JSON.parse(localStorage.getItem("product"));
+    //     // console.log(storedNames);
+    //     for (var item = 0; item < storedNames.length; item++) {
+    //         // console.log(storedNames);
+    //         var utlImage = JSON.parse(storedNames[item].m_picture);
+    //         $('.shop-product-wrap').append(` <div class="col-lg-3 col-sm-6">
+    //         <div class="product-item mb-53">
+    //         <div class="product-thumb">
+    //         <a href="/chi-tiet-san-pham/${storedNames[item].m_product_slug}"">
+    //         <img src="{!! asset('uploads/${utlImage[0]}') !!}" alt="">
+    //         </a>
+    //         </div>
+    //         <div class="product-content">
+    //         <h5 class="product-name">
+    //         <a href="/chi-tiet-san-pham/${storedNames[item].m_product_slug}">${storedNames[item].m_product_name}</a>
+    //         </h5>
+    //         <div class="price-box">
+    //         <span class="price-regular">${storedNames[item].m_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}VND</span>
+    //         <span class="price-old"><del>${storedNames[item].m_original_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del></span>
+    //         </div>
+    //         </div>`)
+    //     }
+    // });
+
     $(document).ready(function() {
-        var storedNames = JSON.parse(localStorage.getItem("product"));
-        // console.log(storedNames);
-        for (var item = 0; item < storedNames.length; item++) {
-            // console.log(storedNames);
-            var utlImage = JSON.parse(storedNames[item].m_picture);
-            $('.shop-product-wrap').append(` <div class="col-lg-3 col-sm-6">
-            <div class="product-item mb-53">
-            <div class="product-thumb">
-            <a href="/chi-tiet-san-pham/${storedNames[item].m_product_slug}"">
-            <img src="{!! asset('uploads/${utlImage[0]}') !!}" alt="">
-            </a>
-            </div>
-            <div class="product-content">
-            <h5 class="product-name">
-            <a href="/chi-tiet-san-pham/${storedNames[item].m_product_slug}">${storedNames[item].m_product_name}</a>
-            </h5>
-            <div class="price-box">
-            <span class="price-regular">${storedNames[item].m_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}VND</span>
-            <span class="price-old"><del>${storedNames[item].m_original_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</del></span>
-            </div>
-            </div>`)
-        }
+        $('.ion-android-favorite-outline').click(function(event) {
+            event.preventDefault();
+            var idProduct = $(this).data('id');
+            $("#product-favourite-" + idProduct).addClass("active-favourite");
+            $.ajax({
+                type: "post",
+                url: "/product-favourite",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    'idProduct': idProduct,
+                },
+                success: function(response) {
+                    if (response.status == 200) {
+                        toastr.success('',
+                            response.message)
+                    } else {
+                        toastr.error('',
+                            response.message)
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+
+        });
     });
 
     $('.cart-info').submit(function(e) {
@@ -72,7 +101,7 @@ Danh sách sản phẩm
 @endpush
 @section('content')
 
-<main>
+<!-- <main>
     <div class="breadcrumb-area bg-img" data-bg="{{ URL::asset('Auth/img/banner/breadcrumb-banner.jpg') }}">
         <div class="container">
             <div class="row">
@@ -106,6 +135,75 @@ Danh sách sản phẩm
                         <div class="shop-product-wrap grid-view row mbn-50">
 
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+</main> -->
+<main>
+    <div class="breadcrumb-area bg-img" data-bg="{{ URL::asset('Auth/img/banner/breadcrumb-banner.jpg') }}">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-wrap text-center">
+                        <nav aria-label="breadcrumb">
+                            <h1 class="breadcrumb-title"> Danh sách Sản phẩm yêu thích</h1>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="shop-main-wrapper section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 order-1">
+                    <div class="shop-product-wrapper">
+                        <div class="shop-top-bar">
+                            <div class="row">
+                                <div class="col-xl-5 col-lg-4 col-md-3 order-2 order-md-1">
+                                    <div class="top-bar-left">
+                                        <div class="product-view-mode">
+                                            <a class="active" href="#" data-target="grid-view"><i class="fa fa-th"></i></a>
+                                            <a href="#" data-target="list-view"><i class="fa fa-list"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="shop-product-wrap grid-view row mbn-50">
+                            @foreach ($list_favourite as $key => $showprd)
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="product-item mb-53">
+                                    <div class="product-thumb">
+                                        <a href="{{ route('productdetails', $showprd->m_product_slug) }}">
+                                            @if (json_decode($showprd->m_picture))
+                                            <img src="{{ asset('uploads') }}/{{ json_decode($showprd->m_picture)[0] }}" alt="">
+                                            @endif
+                                        </a>
+                                    </div>
+                                    <div class="product-content">
+                                        <h5 class="product-name">
+                                            <a href="{{ route('productdetails', $showprd->m_product_slug) }}">{{ Str::length($showprd->m_product_name) > 10 ? Str::substr($showprd->m_product_name, 0, 15)."..." :  $showprd->m_product_name}}</a>
+                                        </h5>
+                                        <div class="price-box">
+                                            <span class="price-regular">{{ number_format($showprd->m_original_price, 0, ',', '.') }}VND</span>
+                                            <span class="price-old"><del>{{ number_format($showprd->m_price, 0, ',', '.') }}VND</del></span>
+                                        </div>
+                                        <div class="product-action-link">
+                                            
+                                            <form action="" method="post" class="cart-info">
+                                                @csrf
+                                                <input type="hidden" name="quantity" value="1">
+                                                <input type="hidden" name="productId" value="{{ $showprd->id }}">
+                                            </form>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
